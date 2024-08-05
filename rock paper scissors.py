@@ -1,4 +1,13 @@
+from peewee import *
+
 choices = ['rock', 'paper', 'scissors']
+
+db = SqliteDatabase('rps_game.db')
+
+
+class BaseModel(Model):
+    class Meta:
+        database = db
 
 
 def input_name():
