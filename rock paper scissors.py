@@ -30,7 +30,12 @@ db.create_tables([Player, GameResult])
 def input_name():
     player_1_name = input("Enter player 1 name: ")
     player_2_name = input("Enter player 2 name: ")
-    return player_1_name, player_2_name
+
+    player_1, created = Player.get_or_create(name=player_1_name)
+    player_2, created = Player.get_or_create(name=player_2_name)
+
+    return player_1, player_2
+
 
 
 def get_player_choice(player_name):
@@ -86,23 +91,30 @@ def play_again():
 
 def main():
     while True:
-        player_1_name, player_2_name = input_name()
-        scores = {player_1_name: 0, player_2_name: 0}
+        player_1, player_2 = input_name()
+        scores = {player_1.name: 0, player_2.name: 0}
 
         while True:
-            player_1_choice = get_player_choice(player_1_name)
-            player_2_choice = get_player_choice(player_2_name)
+            player_1_choice = get_player_choice(player_1.name)
+            player_2_choice = get_player_choice(player_2.name)
 
-            winner = player_winner(player_1_choice, player_2_choice, player_1_name, player_2_name)
+            winner = player_winner(player_1_choice, player_2_choice, player_1.name, player_2.name)
             print(winner)
 
-            scores = update_score(winner, player_1_name, player_2_name, scores)
+            scores = update_score(winner, player_1.name, player_2.name, scores)
 
-            if check_game_over(scores, player_1_name, player_2_name):
+            if check_game_over(scores, player_1.name, player_2.name):
+                GameResult.create(
+                    player_1=player_1,
+                    player_2=player_2,
+                    winner=winner,
+                    player_1_score=scores[player_1.name],
+                    player_2_score=scores[player_2.name]
+                )
                 break
 
         if not play_again():
             break
-
+    db.close()
 
 main()
