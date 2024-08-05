@@ -10,6 +10,23 @@ class BaseModel(Model):
         database = db
 
 
+class Player(BaseModel):
+    name = CharField(unique=True)
+
+
+class GameResult(BaseModel):
+    player_1 = ForeignKeyField(Player, backref='games_as_player_1')
+    player_2 = ForeignKeyField(Player, backref='games_as_player_2')
+    winner = CharField()
+    player_1_score = IntegerField()
+    player_2_score = IntegerField()
+    timestamp = DateTimeField(constraints=[SQL('DEFAULT CURRENT_TIMESTAMP')])
+
+
+db.connect()
+db.create_tables([Player, GameResult])
+
+
 def input_name():
     player_1_name = input("Enter player 1 name: ")
     player_2_name = input("Enter player 2 name: ")
