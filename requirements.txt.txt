@@ -1,0 +1,5 @@
+python version == 3.12
+
+peewee version == 3.17.6
+
+Use command 'pip3 install peewee'
