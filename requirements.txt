@@ -1,0 +1,9 @@
+python==3.12
+
+aiohttp==3.10.3
+
+Use command 'pip install aiohttp'
+
+aiosqlite==0.20.0
+
+Use command 'pip install aiosqlite'
